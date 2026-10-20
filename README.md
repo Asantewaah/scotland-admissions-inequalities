@@ -6,10 +6,16 @@ People living in Scotland's most deprived areas are admitted to hospital as emer
 
 ## Data
 
-- **Inpatient and daycase activity by health board of residence and deprivation** from [Public Health Scotland open data](https://www.opendata.nhs.scot/dataset/inpatient-and-daycase-activity). Quarterly episodes and stays by admission type and SIMD quintile (1 = most deprived, 5 = least deprived).
-- **Population estimates by SIMD quintile** from [PHS open data](https://www.opendata.nhs.scot/dataset/population-estimates), used to turn counts into rates.
+All from the [Public Health Scotland open data portal](https://www.opendata.nhs.scot):
 
-Both are published under the [UK Open Government Licence](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). Raw data is downloaded by script and not stored in this repository.
+| File | Source | Used for |
+|---|---|---|
+| `admissions_hb_simd.csv` | [Inpatient and daycase activity by board of residence and deprivation](https://www.opendata.nhs.scot/dataset/inpatient-and-daycase-activity/resource/77d3d413-d7d6-4ad7-b89c-9e30ae75c64e) | Quarterly emergency admissions by health board and SIMD quintile (1 = most deprived, 5 = least deprived) |
+| `simd2020v2_datazone.csv` | [SIMD 2020v2 lookup](https://www.opendata.nhs.scot/dataset/scottish-index-of-multiple-deprivation/resource/acade396-8430-4b34-895a-b3e757fa346e) | Assigning each data zone to a health board and deprivation quintile |
+| `population_datazone.csv` | [Data zone population estimates](https://www.opendata.nhs.scot/dataset/population-estimates/resource/c505f490-c201-44bd-abd1-1bd7a64285ee) | Population denominators for rates |
+| `hb_labels.csv` | [Health board codes and labels](https://www.opendata.nhs.scot/dataset/geography-codes-and-labels/resource/652ff726-e676-4a20-abda-435b98dd7bdc) | Health board names |
+
+All are published under the [UK Open Government Licence](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). Raw data is downloaded by script and not stored in this repository. Each run records the source URL, portal update date and file checksum in `data/raw/download_log.csv`.
 
 ## Approach
 
@@ -23,7 +29,7 @@ Both are published under the [UK Open Government Licence](https://www.nationalar
 ## Progress
 
 - [x] Project setup
-- [ ] Data download
+- [x] Data download
 - [ ] Cleaning and joining
 - [ ] Exploratory analysis
 - [ ] Inequality measures
@@ -45,11 +51,17 @@ app/               Shiny dashboard
 
 Requires R 4.3 or later. Package versions are pinned with [renv](https://rstudio.github.io/renv/).
 
+From the project root:
+
 ```r
 renv::restore()
 ```
 
-Scripts will be added to `R/` as the project develops.
+```bash
+Rscript R/01_download_data.R
+```
+
+Further scripts will be added to `R/` as the project develops.
 
 ## Author
 
