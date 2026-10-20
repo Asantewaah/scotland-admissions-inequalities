@@ -1,0 +1,27 @@
+# R session files
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# renv library (the lockfile is tracked)
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/staging/
+
+# Data is downloaded by script, not committed
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Shiny and shinylive build output
+app/rsconnect/
+docs/
+
+# Editor and OS files
+.vscode/
+.DS_Store
