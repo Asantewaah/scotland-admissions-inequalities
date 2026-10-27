@@ -17,6 +17,15 @@ All from the [Public Health Scotland open data portal](https://www.opendata.nhs.
 
 All are published under the [UK Open Government Licence](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). Raw data is downloaded by script and not stored in this repository. Each run records the source URL, portal update date and file checksum in `data/raw/download_log.csv`.
 
+### Definitions and data notes
+
+- **Emergency admission** means a continuous inpatient stay that began as an emergency admission (PHS "Emergency Inpatients", counted as stays rather than episodes, so transfers between specialties are not double counted).
+- **Rates** are annualised crude rates per 100,000 people: each quarter's stays multiplied by four, divided by that board and quintile's population. They are not age-standardised, because the published admissions are not broken down by age. Deprived areas in Scotland have younger populations on average, so crude rates if anything understate the gap.
+- **Deprivation** uses Scotland-wide SIMD quintiles. Population denominators use SIMD 2020v2 for every year, while PHS assigns each admission to the SIMD release closest to its year, so rates for earlier years are slightly approximate.
+- **Population** for quarters beyond the latest published estimates uses the most recent year available. These rows are flagged in the processed data.
+- Admissions with unknown deprivation (no valid postcode) are excluded; the cleaning script reports their share.
+- A few board and quintile combinations have no population under SIMD 2020v2 (for example, the island boards have no data zones in the most deprived national quintile). Their admissions cannot be turned into rates and are dropped; the cleaning script lists them and confirms they are under 1% of stays.
+
 ## Approach
 
 1. Download the data reproducibly from the PHS open data portal
@@ -30,7 +39,7 @@ All are published under the [UK Open Government Licence](https://www.nationalarc
 
 - [x] Project setup
 - [x] Data download
-- [ ] Cleaning and joining
+- [x] Cleaning and joining
 - [ ] Exploratory analysis
 - [ ] Inequality measures
 - [ ] Interrupted time series
@@ -58,7 +67,8 @@ renv::restore()
 ```
 
 ```bash
-Rscript R/01_download_data.R
+Rscript R/01_download_data.R   # download raw data from PHS
+Rscript R/02_clean_data.R      # clean, check and build the analysis table
 ```
 
 Further scripts will be added to `R/` as the project develops.
