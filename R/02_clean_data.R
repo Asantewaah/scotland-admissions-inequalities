@@ -1,13 +1,20 @@
 # 02_clean_data.R
 #
-# Cleans the raw PHS files and builds one analysis-ready table:
-# quarterly emergency admissions (continuous inpatient stays) by health board
-# and SIMD quintile, joined to population so counts can be expressed as rates.
+# Cleans the raw PHS files and builds two analysis-ready tables of emergency
+# admissions (continuous inpatient stays) by health board and SIMD quintile:
+#
+#   1. Quarterly, from 2020Q4: counts joined to population to give crude rates.
+#      Used for the "recent quarters" view of the dashboard.
+#   2. Annual, by financial year from 2016/17: PHS age-standardised rates.
+#      Used for the main analysis, because it covers the years before the
+#      pandemic and removes differences in age structure between areas.
 #
 # Run from the project root after 01_download_data.R:
 #   Rscript R/02_clean_data.R
 #
-# Output: data/processed/emergency_admissions_simd.csv
+# Outputs:
+#   data/processed/emergency_admissions_simd.csv          (quarterly)
+#   data/processed/emergency_admissions_simd_annual.csv   (annual)
 
 library(dplyr)
 library(readr)
@@ -246,7 +253,73 @@ write_csv(analysis, out_path)
 
 scot <- filter(analysis, hb == scotland_code)
 message(sprintf(
-  "Done. %s rows, %s to %s, saved to %s",
+  "Quarterly done. %s rows, %s to %s, saved to %s",
   format(nrow(analysis), big.mark = ","),
   min(scot$quarter), max(scot$quarter), out_path
 ))
+
+# ==== Annual, age-standardised ================================================
+#
+# PHS publishes European age-sex standardised rates per 100,000 (StaysRate) by
+# financial year, board of residence and SIMD quintile. Population by board and
+# quintile (built above) is kept alongside, because the inequality measures use
+# each quintile's population share as a weight.
+
+message("Annual admissions (financial years, age-standardised)")
+ann_raw <- read_raw("admissions_hb_simd_annual")
+require_cols(
+  ann_raw,
+  c("FinancialYear", "HB", "AdmissionType", "SIMD", "Stays", "StaysRate"),
+  "admissions_hb_simd_annual"
+)
+
+if (!"Emergency" %in% ann_raw$AdmissionType) {
+  stop("No 'Emergency' rows in the annual file. Admission types found: ",
+       paste(unique(ann_raw$AdmissionType), collapse = ", "), call. = FALSE)
+}
+if (!"FinancialYearQF" %in% names(ann_raw)) ann_raw$FinancialYearQF <- NA_character_
+
+annual <- ann_raw |>
+  filter(AdmissionType == "Emergency") |>
+  mutate(
+    hb = recode_hb(HB),
+    # SIMD holds 1 to 5, plus "All SIMDs" and blanks for unknown; keep 1 to 5
+    simd = suppressWarnings(as.integer(trimws(SIMD))),
+    year = as.integer(substr(FinancialYear, 1, 4)),
+    provisional = !is.na(FinancialYearQF) & FinancialYearQF == "p"
+  ) |>
+  filter(hb %in% board_names$hb, simd %in% 1:5) |>
+  select(financial_year = FinancialYear, year, provisional, hb, simd,
+         stays = Stays, rate_per_100k = StaysRate)
+
+check(all(boards$hb %in% annual$hb), "all 14 boards appear in the annual data")
+check(!any(duplicated(annual[c("financial_year", "hb", "simd")])),
+      "one row per financial year, board and quintile")
+
+scot_ann <- filter(annual, hb == scotland_code)
+check(all(table(scot_ann$financial_year) == 5),
+      "Scotland has all 5 quintiles in every financial year")
+check(!any(is.na(scot_ann$rate_per_100k)), "Scotland has an age-standardised rate in every year")
+
+missing_rate <- annual |> filter(is.na(rate_per_100k))
+if (nrow(missing_rate) > 0) {
+  message(sprintf("  info: %d board, year and quintile rows have no age-standardised rate (left blank)",
+                  nrow(missing_rate)))
+}
+
+message(sprintf("  info: financial years %s to %s; provisional: %s",
+                min(annual$financial_year), max(annual$financial_year),
+                paste(unique(annual$financial_year[annual$provisional]), collapse = ", ")))
+
+annual <- annual |>
+  mutate(pop_year = pmin(pmax(year, pop_years[1]), pop_years[2])) |>
+  left_join(rename(pop, pop_year = year), by = c("pop_year", "hb", "simd")) |>
+  left_join(board_names, by = "hb") |>
+  select(financial_year, year, provisional, hb, hb_name, simd, stays,
+         rate_per_100k, population, pop_year) |>
+  arrange(hb_name, simd, year)
+
+ann_path <- file.path(out_dir, "emergency_admissions_simd_annual.csv")
+write_csv(annual, ann_path)
+message(sprintf("Annual done. %s rows saved to %s",
+                format(nrow(annual), big.mark = ","), ann_path))

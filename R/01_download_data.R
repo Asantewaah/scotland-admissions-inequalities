@@ -28,18 +28,21 @@ overwrite <- "--overwrite" %in% commandArgs(trailingOnly = TRUE)
 resources <- data.frame(
   name = c(
     "admissions_hb_simd",
+    "admissions_hb_simd_annual",
     "simd2020v2_datazone",
     "population_datazone",
     "hb_labels"
   ),
   resource_id = c(
     "77d3d413-d7d6-4ad7-b89c-9e30ae75c64e",
+    "249a9b22-8163-48db-ab3e-f33f3adf4c1e",
     "acade396-8430-4b34-895a-b3e757fa346e",
     "c505f490-c201-44bd-abd1-1bd7a64285ee",
     "652ff726-e676-4a20-abda-435b98dd7bdc"
   ),
   description = c(
     "Quarterly inpatient and daycase activity by health board of residence and SIMD quintile",
+    "Annual (financial year) activity by health board of residence and SIMD quintile, with age-standardised rates",
     "SIMD 2020v2 lookup: data zone to health board and deprivation quintile",
     "Mid-year population estimates by data zone, sex and age",
     "Health board codes and names"
