@@ -40,11 +40,21 @@ All are published under the [UK Open Government Licence](https://www.nationalarc
 - [x] Project setup
 - [x] Data download
 - [x] Cleaning and joining
-- [ ] Exploratory analysis
+- [x] Exploratory analysis
 - [ ] Inequality measures
 - [ ] Interrupted time series
 - [ ] Dashboard
 - [ ] Write-up of findings
+
+## Results so far
+
+### Emergency admission rates by deprivation, Scotland
+
+![Emergency admission rates by SIMD quintile](output/figures/rates_by_quintile_scotland.png)
+
+### The gap in each health board
+
+![Rate ratio of most to least deprived by health board](output/figures/rate_ratio_by_board.png)
 
 ## Repository structure
 
@@ -53,6 +63,7 @@ R/                 analysis scripts, run in numbered order
 data/raw/          downloaded data (not tracked)
 data/processed/    cleaned data (not tracked)
 output/figures/    charts used in this README
+output/tables/     summary tables (annual rates, inequality measures)
 app/               Shiny dashboard
 ```
 
@@ -69,6 +80,7 @@ renv::restore()
 ```bash
 Rscript R/01_download_data.R   # download raw data from PHS
 Rscript R/02_clean_data.R      # clean, check and build the analysis table
+Rscript R/03_explore.R         # annual rates and first charts
 ```
 
 Further scripts will be added to `R/` as the project develops.
