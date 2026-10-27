@@ -44,7 +44,7 @@ All are published under the [UK Open Government Licence](https://www.nationalarc
 - [x] Data download
 - [x] Cleaning and joining
 - [x] Exploratory analysis
-- [ ] Inequality measures
+- [x] Inequality measures
 - [ ] Interrupted time series
 - [ ] Dashboard
 - [ ] Write-up of findings
@@ -58,6 +58,14 @@ All are published under the [UK Open Government Licence](https://www.nationalarc
 ### The gap in each health board
 
 ![Rate ratio of most to least deprived by health board](output/figures/rate_ratio_by_board.png)
+
+### Measuring the gap
+
+The rate ratio compares only the two extreme quintiles. The **slope index of inequality (SII)** uses all five: each quintile is placed at the midpoint of its share of the population, ranked from most to least deprived, and a population-weighted regression of rates on that rank gives the modelled absolute gap between the most and least deprived ends of the population. The **relative index of inequality (RII)** divides the SII by the average rate, so the gap can be compared over time even as overall admission rates rise and fall.
+
+![Relative index of inequality over time, Scotland](output/figures/rii_scotland.png)
+
+![Change in relative index of inequality by health board](output/figures/rii_by_board_change.png)
 
 ## Repository structure
 
@@ -84,6 +92,7 @@ renv::restore()
 Rscript R/01_download_data.R   # download raw data from PHS
 Rscript R/02_clean_data.R      # clean, check and build annual and quarterly tables
 Rscript R/03_explore.R         # rates by deprivation and first charts
+Rscript R/04_inequality.R      # rate ratio, rate difference, SII and RII
 ```
 
 ## Author
