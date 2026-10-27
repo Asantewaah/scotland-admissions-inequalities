@@ -34,7 +34,8 @@ quintile_labels <- c(
 covid_start <- as.Date("2020-04-01")
 covid_end   <- as.Date("2021-03-31")
 
-source_note <- "Source: Public Health Scotland open data. Crude annualised rates per 100,000 people."
+source_note <- "Source: Public Health Scotland open data. European age-sex standardised rates per 100,000 people, by financial year."
+source_note_quarterly <- "Source: Public Health Scotland open data. Crude annualised rates per 100,000 people."
 
 theme_project <- function(base_size = 12) {
   theme_minimal(base_size = base_size) +
@@ -69,6 +70,32 @@ covid_band <- function(label = TRUE) {
   }
   layers
 }
+
+# ---- Financial-year helpers (annual data) -----------------------------------
+# Annual charts put financial years on a numeric axis: 2020 means 2020/21.
+
+fy_label <- function(year) sprintf("%d/%02d", year, (year + 1) %% 100)
+
+scale_x_fy <- function(years, by = 2, expand_right = 0.03) {
+  scale_x_continuous(breaks = seq(min(years), max(years), by = by), labels = fy_label,
+                     expand = expansion(mult = c(0.02, expand_right)))
+}
+
+# Shades financial year 2020/21, the first pandemic year
+covid_band_fy <- function(label = TRUE) {
+  layers <- list(annotate("rect", xmin = 2019.5, xmax = 2020.5, ymin = -Inf, ymax = Inf,
+                          fill = col_band))
+  if (label) {
+    layers <- c(layers, list(
+      annotate("text", x = 2020, y = Inf, label = "First COVID-19\nyear",
+               vjust = 1.3, size = 3, colour = col_muted, lineheight = 0.9)
+    ))
+  }
+  layers
+}
+
+# Latest financial year that is not provisional
+latest_complete_fy <- function(df) max(df$year[!df$provisional])
 
 # Year ticks every `by` years, only within the range of the data
 year_breaks <- function(dates, by = 2) {
