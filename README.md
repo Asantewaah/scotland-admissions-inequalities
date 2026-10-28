@@ -2,7 +2,16 @@
 
 People living in Scotland's most deprived areas are admitted to hospital as emergencies far more often than those in the least deprived areas. This project asks whether that gap has narrowed, widened or stayed the same since the COVID-19 pandemic, and how it differs across NHS health boards.
 
-> Work in progress. This README grows as each stage of the analysis is completed.
+## Key findings
+
+Comparing 2019/20 (the last full pre-pandemic year) with 2024/25 (the latest complete year), using age-standardised rates:
+
+- **The gap is still large.** People in the most deprived fifth of Scotland had about twice as many emergency admissions as those in the least deprived fifth: 14,370 against 7,136 per 100,000, a rate ratio of 2.01.
+- **It has narrowed a little, in absolute and relative terms.** The rate ratio fell from 2.13 to 2.01. The absolute gap between the two extreme quintiles fell from 8,759 to 7,232 per 100,000. The slope index of inequality fell from 10,790 to 8,840, and the relative index of inequality fell from 0.94 to 0.87.
+- **Most of the narrowing comes from fewer admissions in deprived areas.** Rates in the most deprived quintile fell by about 2,200 per 100,000 (13%), compared with about 640 (8%) in the least deprived.
+- **There is no clear evidence that the pandemic changed the direction of the gap.** The relative gap was already falling before 2020, by about 0.9 points a year. In 2024/25 it was 4.1 points below where that trend would have taken it (95% CI -17.9 to +9.7). The pooled health board model gives a similar result: -5.8 points (95% CI -25.4 to +13.8). All three models point the same way, but the intervals are wide and include no change. For the absolute gap (SII), only the pooled model's level change is borderline: -745 per 100,000 (95% CI -1,484 to -6, p = 0.048).
+- **The gap narrowed in every mainland board, but by different amounts.** Dumfries and Galloway (1.84 to 1.52), Ayrshire and Arran (1.89 to 1.71), and Grampian (2.14 to 1.92) saw the biggest falls in the rate ratio. **Lothian (2.22 to 2.18) and Greater Glasgow and Clyde (2.19 to 2.11) changed least, and now have the widest gaps in Scotland.**
+- **2025/26 provisional figures suggest the narrowing is continuing**, with a rate ratio of 1.93 and an RII of 0.81. These figures will be revised, and they are not used in the models.
 
 ## Interactive dashboard
 
@@ -51,9 +60,9 @@ All are published under the [UK Open Government Licence](https://www.nationalarc
 - [x] Inequality measures
 - [x] Interrupted time series
 - [x] Dashboard
-- [ ] Write-up of findings
+- [x] Write-up of findings
 
-## Results so far
+## Results
 
 ### Emergency admission rates by deprivation, Scotland
 
@@ -87,7 +96,16 @@ The headline is the difference between the observed gap and its pre-pandemic tre
 
 ![Interrupted time series of the relative index of inequality](output/figures/its_rii_scotland.png)
 
-Full estimates are in `output/tables/its_results.csv` and `output/tables/its_effect_at_end.csv`.
+Full estimates are in `output/tables/its_results.csv` and `output/tables/its_effect_at_end.csv`. The headline numbers used in this README are collected in [`output/key_numbers.md`](output/key_numbers.md).
+
+## Limitations
+
+- **Short baseline.** Only four pre-pandemic years are available in the annual file, so the pre-pandemic trend is uncertain and the time series has little power to detect a shift. A null result here means "not enough evidence", not "no change".
+- **Area-level deprivation.** SIMD describes the area a person lives in, not the person. Not everyone in a deprived area is deprived, and many deprived people live elsewhere, especially in rural boards. The results describe areas, not individuals.
+- **Narrowing for the wrong reasons.** A smaller gap is only good news if it reflects better health. Fewer emergency admissions in deprived areas could also reflect changes in access, such as more care given in A&E without admission or longer waits. This analysis cannot tell these apart.
+- **SIMD versions change over time.** PHS assigns each admission to the SIMD release closest to its year, so some areas move between quintiles across the series.
+- **Island boards.** Orkney, Shetland and the Western Isles have no data zones in the most deprived quintile and small numbers, so their estimates are left out of the board comparison.
+- **Observational design.** The time series compares observed values with an extrapolated trend. Anything else that changed after 2020, such as NHS winter pressures or new urgent care pathways, could explain part of the difference.
 
 ## Repository structure
 
