@@ -6,10 +6,6 @@
 # Run from the project root after 06_dashboard_data.R:
 #   Rscript R/07_build_dashboard.R
 #
-# Then, once, on GitHub: Settings > Pages > Source "Deploy from a branch",
-# branch "main", folder "/docs". The dashboard appears at
-#   https://asantewaah.github.io/scotland-admissions-inequalities/
-#
 # To preview locally before pushing:
 #   httpuv::runStaticServer("docs")
 
