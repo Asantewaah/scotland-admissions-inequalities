@@ -4,6 +4,10 @@ People living in Scotland's most deprived areas are admitted to hospital as emer
 
 > Work in progress. This README grows as each stage of the analysis is completed.
 
+## Interactive dashboard
+
+**[Explore the dashboard](https://asantewaah.github.io/scotland-admissions-inequalities/)**: choose any NHS health board to see its emergency admission rates by deprivation and how the gap has changed. Built in Shiny and exported with [shinylive](https://posit-dev.github.io/r-shinylive/), so it runs entirely in the browser.
+
 ## Data
 
 All from the [Public Health Scotland open data portal](https://www.opendata.nhs.scot):
@@ -46,7 +50,7 @@ All are published under the [UK Open Government Licence](https://www.nationalarc
 - [x] Exploratory analysis
 - [x] Inequality measures
 - [x] Interrupted time series
-- [ ] Dashboard
+- [x] Dashboard
 - [ ] Write-up of findings
 
 ## Results so far
@@ -94,6 +98,7 @@ data/processed/    cleaned data (not tracked)
 output/figures/    charts used in this README
 output/tables/     summary tables (rates, inequality measures, model results)
 app/               Shiny dashboard (app.R and its data)
+docs/              built dashboard served by GitHub Pages
 ```
 
 ## Reproducing the analysis
@@ -112,7 +117,11 @@ Rscript R/02_clean_data.R      # clean, check and build annual and quarterly tab
 Rscript R/03_explore.R         # rates by deprivation and first charts
 Rscript R/04_inequality.R      # rate ratio, rate difference, SII and RII
 Rscript R/05_its.R             # interrupted time series
+Rscript R/06_dashboard_data.R  # small data files for the dashboard
+Rscript R/07_build_dashboard.R # build the browser dashboard into docs/
 ```
+
+Run the dashboard locally with `shiny::runApp("app")`.
 
 ## Author
 
