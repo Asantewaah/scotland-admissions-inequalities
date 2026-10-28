@@ -119,6 +119,7 @@ Rscript R/04_inequality.R      # rate ratio, rate difference, SII and RII
 Rscript R/05_its.R             # interrupted time series
 Rscript R/06_dashboard_data.R  # small data files for the dashboard
 Rscript R/07_build_dashboard.R # build the browser dashboard into docs/
+Rscript R/08_key_numbers.R     # headline numbers for the write-up
 ```
 
 Run the dashboard locally with `shiny::runApp("app")`.
