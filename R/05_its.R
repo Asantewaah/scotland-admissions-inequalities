@@ -175,9 +175,16 @@ title <- if (same_sign && pooled_clear) {
           eff_s$year, min(abs(100 * eff_all$effect)), max(abs(100 * eff_all$effect)),
           if (eff_p$effect > 0) "above" else "below")
 } else {
-  sprintf("The relative gap %s from %.0f%% in %s to %.0f%% in %s, but with only four pre-pandemic years the models disagree on whether this departs from the earlier trend",
+  # When the models share a direction but the pooled interval includes zero,
+  # they do not disagree: the data are just too few to tell.
+  verdict <- if (same_sign) {
+    "it is too uncertain to say whether this departs from the earlier trend"
+  } else {
+    "the models disagree on whether this departs from the earlier trend"
+  }
+  sprintf("The relative gap %s from %.0f%% in %s to %.0f%% in %s, but with only four pre-pandemic years %s",
           if (rii_end > rii_pre) "rose" else "fell", 100 * rii_pre,
-          fy_label(transition_year - 1), 100 * rii_end, eff_s$year)
+          fy_label(transition_year - 1), 100 * rii_end, eff_s$year, verdict)
 }
 
 fig5 <- ggplot() +
