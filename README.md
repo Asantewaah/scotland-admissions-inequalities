@@ -45,7 +45,7 @@ All are published under the [UK Open Government Licence](https://www.nationalarc
 - [x] Cleaning and joining
 - [x] Exploratory analysis
 - [x] Inequality measures
-- [ ] Interrupted time series
+- [x] Interrupted time series
 - [ ] Dashboard
 - [ ] Write-up of findings
 
@@ -66,6 +66,24 @@ The rate ratio compares only the two extreme quintiles. The **slope index of ine
 ![Relative index of inequality over time, Scotland](output/figures/rii_scotland.png)
 
 ![Change in relative index of inequality by health board](output/figures/rii_by_board_change.png)
+
+### Did the pandemic shift the gap?
+
+An interrupted time series compares the gap after the pandemic with where its pre-pandemic trend was heading. 2016/17 to 2019/20 are the pre-pandemic years; 2020/21 is treated as a transition year and left out, so the collapse in admissions during lockdown does not drive the estimates; 2021/22 onwards is post-pandemic.
+
+Four pre-pandemic years is a short baseline, so three models are reported side by side:
+
+| Model | What it assumes | Why it is included |
+|---|---|---|
+| Scotland: level and slope change | The gap can jump and change direction after the pandemic | The standard segmented regression, but a trend fitted to four points is fragile |
+| Scotland: level change only | The gap can jump, but keeps its earlier trend | More stable when the baseline is short |
+| Boards pooled: level and slope change | As the first model, fitted to every board at once with board fixed effects and standard errors clustered by board | Uses around ten times as much data to estimate the average shift within boards |
+
+The headline is the difference between the observed gap and its pre-pandemic trend in the latest complete year, with a 95% confidence interval. The chart's title only claims a shift when all three models agree on its direction and the pooled estimate is clearly different from zero.
+
+![Interrupted time series of the relative index of inequality](output/figures/its_rii_scotland.png)
+
+Full estimates are in `output/tables/its_results.csv` and `output/tables/its_effect_at_end.csv`.
 
 ## Repository structure
 
@@ -93,6 +111,7 @@ Rscript R/01_download_data.R   # download raw data from PHS
 Rscript R/02_clean_data.R      # clean, check and build annual and quarterly tables
 Rscript R/03_explore.R         # rates by deprivation and first charts
 Rscript R/04_inequality.R      # rate ratio, rate difference, SII and RII
+Rscript R/05_its.R             # interrupted time series
 ```
 
 ## Author
